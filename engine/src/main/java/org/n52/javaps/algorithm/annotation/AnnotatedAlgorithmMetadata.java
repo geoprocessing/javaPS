@@ -256,9 +256,12 @@ public class AnnotatedAlgorithmMetadata {
                         "Classes with Algorithm annotation require public no-arg constructor, error introspecting "
                         + algorithmClass.getName());
             }
-        } catch (NoSuchMethodException | SecurityException ex) {
+        } catch (SecurityException ex) {
             throw new RuntimeException("Current security policy limits use of reflection, error introspecting "
-                    + algorithmClass.getName());
+                    + algorithmClass.getName(), ex);
+        } catch (NoSuchMethodException ex) {
+            throw new RuntimeException("Could not resolve constructors of class "
+                    + algorithmClass.getName(), ex);
         }
     }
 
