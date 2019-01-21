@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.junit.Assert;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,6 +45,8 @@ import org.n52.javaps.io.literal.LiteralType;
 import org.n52.javaps.io.literal.LiteralTypeRepository;
 import org.n52.javaps.io.literal.xsd.LiteralIntType;
 import org.n52.javaps.io.literal.xsd.LiteralStringType;
+import org.n52.shetland.ogc.wps.description.GroupInputDescription;
+import org.n52.shetland.ogc.wps.description.ProcessInputDescription;
 
 /**
  * TODO JavaDoc
@@ -77,6 +80,33 @@ public class AnnotatedAlgorithmMetadataTest {
         errors.checkThat(processDescription.getOutputDescriptions().size(), is(7));
 
         errors.checkThat(processDescription.getInput("input8").getOccurence().getMax().get(),is(BigInteger.TEN));
+    }
+
+    @Test
+    public void testGroupParsing() {
+        IORepo repo = new IORepo();
+        AnnotatedAlgorithmMetadata metadata = new AnnotatedAlgorithmMetadata(TestGroupProcess.class, repo, repo,
+                new LiteralDataManagerImpl());
+        ProcessDescription processDescription = metadata.getDescription();
+
+        Assert.assertThat(processDescription.getVersion(), is("1.0.0"));
+        Assert.assertThat(processDescription.getTitle().getValue(), is("Grouping Process"));
+        Assert.assertThat(processDescription.getAbstract().map(OwsLanguageString::getValue).orElse(null), is("Grouping Abstract"));
+        Assert.assertThat(processDescription.getId(), is(new OwsCode(TestGroupProcess.class.getCanonicalName())));
+        Assert.assertThat(processDescription.getInputDescriptions().size(), is(1));
+        Assert.assertThat(processDescription.getOutputDescriptions().size(), is(1));
+
+        Assert.assertThat(processDescription.getInput("dummy-group"), notNullValue());
+        ProcessInputDescription groupDescription = processDescription.getInput("dummy-group");
+        GroupInputDescription asGroup = groupDescription.asGroup();
+
+        Assert.assertThat(asGroup.getInput("input1"), notNullValue());
+        ProcessInputDescription input1 = asGroup.getInput("input1");
+        Assert.assertThat(input1.isLiteral(), is(true));
+
+        Assert.assertThat(asGroup.getInput("input2"), notNullValue());
+        ProcessInputDescription input2 = asGroup.getInput("input1");
+        Assert.assertThat(input2.isLiteral(), is(true));
     }
 
     public static enum TestEnum {
@@ -234,6 +264,54 @@ public class AnnotatedAlgorithmMetadataTest {
         public TestEnum getOutput4() {
             return null;
         }
+    }
+
+    @Algorithm(title = "Grouping Process",
+               abstrakt = "Grouping Abstract",
+               version = "1.0.0")
+    public static class TestGroupProcess {
+
+        @GroupInput(identifier = "dummy-group",
+                abstrakt = "dummy-group abstract",
+                title = "dummy-group title",
+                minOccurs = 1,
+                maxOccurs = 10)
+        public void setGroupInputs1(List<String> groupInputs) {
+        }
+
+        @LiteralInput(identifier = "input1",
+                      abstrakt = "input1 abstract",
+                      title = "input1 title",
+                      minOccurs = 1,
+                      maxOccurs = 1,
+                      defaultValue = "1", uom = "m",
+                      group = "dummy-group")
+        public void setInput1(int input) {
+        }
+
+        @LiteralInput(identifier = "input2",
+                      abstrakt = "input2 abstract",
+                      title = "input2 title",
+                      minOccurs = 1,
+                      maxOccurs = 1,
+                      defaultValue = "asdf",
+                      uom = "m",
+                      group = "dummy-group")
+        public void setInput2(String input) {
+        }
+
+        @Execute
+        public void execute() {
+        }
+
+        @LiteralOutput(identifier = "output1",
+                       abstrakt = "output1 abstract",
+                       title = "output1 title",
+                       uom = "m")
+        public int getOutput1() {
+            return 0;
+        }
+
     }
 
     private static class IORepo implements OutputHandlerRepository, InputHandlerRepository {

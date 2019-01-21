@@ -50,5 +50,7 @@ public @interface ComplexInput {
 
     long maximumMegaBytes() default 0;
 
+    String group() default "";
+
     Class<? extends ComplexData> binding();
 }

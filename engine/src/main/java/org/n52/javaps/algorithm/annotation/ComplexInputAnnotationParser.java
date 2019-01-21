@@ -58,7 +58,8 @@ class ComplexInputAnnotationParser<M extends AccessibleObject & Member, B extend
         return new TypedProcessDescriptionFactory().complexInput().withIdentifier(annotation.identifier()).withAbstract(
                 annotation.abstrakt()).withTitle(annotation.title()).withMinimalOccurence(annotation.minOccurs())
                 .withMaximalOccurence(annotation.maxOccurs()).withMaximumMegabytes(annotation.maximumMegaBytes())
-                .withDefaultFormat(defaultFormat).withSupportedFormat(supportedFormats).withType(bindingClass).build();
+                .withDefaultFormat(defaultFormat).withSupportedFormat(supportedFormats).withType(bindingClass)
+                .withGroup(annotation.group()).build();
     }
 
     @Override

@@ -22,10 +22,16 @@ import org.n52.shetland.ogc.wps.description.GroupInputDescription;
  *
  * @author Christian Autermann
  */
-public interface TypedGroupInputDescription extends GroupInputDescription, TypedProcessInputDescriptionContainer {
+public interface TypedGroupInputDescription extends GroupInputDescription, TypedProcessInputDescriptionContainer,
+        TypedProcessInputDescription {
     @Override
     default TypedGroupInputDescription asGroup() {
         return this;
+    }
+
+    @Override
+    default public boolean isGroup() {
+        return true;
     }
 
 }

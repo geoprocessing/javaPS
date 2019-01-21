@@ -31,22 +31,50 @@ import org.n52.javaps.description.TypedBoundingBoxInputDescription;
 public class TypedBoundingBoxInputDescriptionImpl extends BoundingBoxInputDescriptionImpl implements
         TypedBoundingBoxInputDescription {
 
+    private String group;
+
     public TypedBoundingBoxInputDescriptionImpl(OwsCode id, OwsLanguageString title, OwsLanguageString abstrakt, Set<
             OwsKeyword> keywords, Set<OwsMetadata> metadata, InputOccurence occurence, OwsCRS defaultCRS, Set<
-                    OwsCRS> supportedCRS) {
+                    OwsCRS> supportedCRS, String group) {
         super(id, title, abstrakt, keywords, metadata, occurence, defaultCRS, supportedCRS);
+        this.group = group;
     }
 
-    protected TypedBoundingBoxInputDescriptionImpl(AbstractBuilder<?, ?> builder) {
+    protected TypedBoundingBoxInputDescriptionImpl(Builder builder) {
         this(builder.getId(), builder.getTitle(), builder.getAbstract(), builder.getKeywords(), builder.getMetadata(),
                 new InputOccurence(builder.getMinimalOccurence(), builder.getMaximalOccurence()), builder
-                        .getDefaultCRS(), builder.getSupportedCRS());
+                        .getDefaultCRS(), builder.getSupportedCRS(), builder.getGroup());
+
+
+    }
+
+    @Override
+    public String getGroup() {
+        return this.group;
+    }
+
+    @Override
+    public boolean isGroup() {
+        return this.getGroup() != null && !this.getGroup().isEmpty();
     }
 
     public static class Builder extends AbstractBuilder<TypedBoundingBoxInputDescription, Builder> {
+
+        private String group;
+
         @Override
         public TypedBoundingBoxInputDescription build() {
             return new TypedBoundingBoxInputDescriptionImpl(this);
+        }
+
+        @SuppressWarnings("unchecked")
+        public Builder withGroup(String group) {
+            this.group = group;
+            return  this;
+        }
+
+        public String getGroup() {
+            return group;
         }
     }
 }

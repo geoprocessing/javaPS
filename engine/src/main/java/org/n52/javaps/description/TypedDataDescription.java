@@ -34,6 +34,11 @@ public interface TypedDataDescription<X> extends DataDescription {
     interface Builder<X, T extends TypedDataDescription<X>, B extends Builder<X, T, B>> extends DataDescription.Builder<
             T, B> {
         B withType(X type);
+        B withGroup(String group);
     }
+
+    default String getGroup() {
+        return null;
+    };
 
 }

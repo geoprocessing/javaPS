@@ -23,8 +23,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.n52.javaps.io.literal.LiteralType;
-
 /**
  *
  * @author tkunicki
@@ -34,7 +32,7 @@ import org.n52.javaps.io.literal.LiteralType;
 @Inherited
 @Documented
 @SuppressWarnings("rawtypes")
-public @interface LiteralInput {
+public @interface GroupInput {
 
     // identifier
     String identifier();
@@ -48,18 +46,4 @@ public @interface LiteralInput {
 
     long maxOccurs() default 1;
 
-    String defaultValue() default "";
-
-    String[] allowedValues() default {};
-
-    String uom() default "";
-
-    String group() default "";
-
-    Class<? extends LiteralType> binding() default LiteralType.class;
-
-    /**
-     * Special maxOccurs flags (set maxOccurs to enum constant count).
-     */
-    int ENUM_COUNT = -1;
 }

@@ -64,7 +64,7 @@ class BoundingBoxInputAnnotationParser<M extends AccessibleObject & Member, B ex
         return new TypedProcessDescriptionFactory().boundingBoxInput().withIdentifier(annotation.identifier())
                 .withAbstract(annotation.abstrakt()).withTitle(annotation.title()).withMinimalOccurence(annotation
                         .minOccurs()).withMaximalOccurence(annotation.maxOccurs()).withDefaultCRS(new OwsCRS(
-                                defaultCRSURI)).build();
+                                defaultCRSURI)).withGroup(annotation.group()).build();
     }
 
     @Override

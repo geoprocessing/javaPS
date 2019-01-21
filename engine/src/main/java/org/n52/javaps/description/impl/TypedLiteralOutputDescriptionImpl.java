@@ -53,6 +53,7 @@ public class TypedLiteralOutputDescriptionImpl extends LiteralOutputDescriptionI
             B>> extends LiteralOutputDescriptionImpl.AbstractBuilder<T, B> implements
             TypedLiteralOutputDescription.Builder<T, B> {
         private LiteralType<?> type;
+        private String group;
 
         @Override
         @SuppressWarnings("unchecked")
@@ -63,6 +64,17 @@ public class TypedLiteralOutputDescriptionImpl extends LiteralOutputDescriptionI
 
         public LiteralType<?> getType() {
             return type;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public B withGroup(String group) {
+            this.group = group;
+            return (B) this;
+        }
+
+        public String getGroup() {
+            return group;
         }
 
     }

@@ -34,19 +34,22 @@ public class TypedLiteralInputDescriptionImpl extends LiteralInputDescriptionImp
 
     private static final String TYPE_STRING = "type";
     private final LiteralType<?> type;
+    private String group;
 
     public TypedLiteralInputDescriptionImpl(OwsCode id, OwsLanguageString title, OwsLanguageString abstrakt, Set<
             OwsKeyword> keywords, Set<OwsMetadata> metadata, InputOccurence occurence,
             LiteralDataDomain defaultLiteralDataDomain, Set<LiteralDataDomain> supportedLiteralDataDomain, LiteralType<
-                    ?> type) {
+                    ?> type, String group) {
         super(id, title, abstrakt, keywords, metadata, occurence, defaultLiteralDataDomain, supportedLiteralDataDomain);
         this.type = Objects.requireNonNull(type, TYPE_STRING);
+        this.group = group;
     }
 
     protected TypedLiteralInputDescriptionImpl(AbstractBuilder<?, ?> builder) {
         this(builder.getId(), builder.getTitle(), builder.getAbstract(), builder.getKeywords(), builder.getMetadata(),
                 new InputOccurence(builder.getMinimalOccurence(), builder.getMaximalOccurence()), builder
-                        .getDefaultLiteralDataDomain(), builder.getSupportedLiteralDataDomains(), builder.getType());
+                        .getDefaultLiteralDataDomain(), builder.getSupportedLiteralDataDomains(), builder.getType(),
+                        builder.getGroup());
     }
 
     @Override
@@ -54,11 +57,22 @@ public class TypedLiteralInputDescriptionImpl extends LiteralInputDescriptionImp
         return this.type;
     }
 
+    @Override
+    public String getGroup() {
+        return group;
+    }
+
+    @Override
+    public boolean isGroup() {
+        return this.getGroup() != null && !this.getGroup().isEmpty();
+    }
+
     public abstract static class AbstractBuilder<T extends TypedLiteralInputDescription, B extends AbstractBuilder<T,
             B>> extends LiteralInputDescriptionImpl.AbstractBuilder<T, B> implements
             TypedLiteralInputDescription.Builder<T, B> {
 
         private LiteralType<?> type;
+        private String group;
 
         @Override
         @SuppressWarnings("unchecked")
@@ -71,9 +85,21 @@ public class TypedLiteralInputDescriptionImpl extends LiteralInputDescriptionImp
             return type;
         }
 
+        @Override
+        @SuppressWarnings("unchecked")
+        public B withGroup(String group) {
+            this.group = group;
+            return (B) this;
+        }
+
+        public String getGroup() {
+            return group;
+        }
+
     }
 
     public static class Builder extends AbstractBuilder<TypedLiteralInputDescription, Builder> {
+
         @Override
         public TypedLiteralInputDescription build() {
             return new TypedLiteralInputDescriptionImpl(this);

@@ -35,19 +35,22 @@ public class TypedComplexInputDescriptionImpl extends ComplexInputDescriptionImp
 
     private static final String TYPE_STRING = "type";
     private final Class<? extends ComplexData<?>> type;
+    private final String group;
 
     public TypedComplexInputDescriptionImpl(OwsCode id, OwsLanguageString title, OwsLanguageString abstrakt, Set<
             OwsKeyword> keywords, Set<OwsMetadata> metadata, InputOccurence occurence, Format defaultFormat, Set<
-                    Format> supportedFormat, BigInteger maximumMegabytes, Class<? extends ComplexData<?>> type) {
+                    Format> supportedFormat, BigInteger maximumMegabytes, Class<? extends ComplexData<?>> type,
+                    String group) {
         super(id, title, abstrakt, keywords, metadata, occurence, defaultFormat, supportedFormat, maximumMegabytes);
         this.type = Objects.requireNonNull(type, TYPE_STRING);
+        this.group = group;
     }
 
     protected TypedComplexInputDescriptionImpl(AbstractBuilder<?, ?> builder) {
         this(builder.getId(), builder.getTitle(), builder.getAbstract(), builder.getKeywords(), builder.getMetadata(),
                 new InputOccurence(builder.getMinimalOccurence(), builder.getMaximalOccurence()), builder
                         .getDefaultFormat(), builder.getSupportedFormats(), builder.getMaximumMegabytes(), builder
-                                .getType());
+                                .getType(), builder.getGroup());
     }
 
     @Override
@@ -55,11 +58,22 @@ public class TypedComplexInputDescriptionImpl extends ComplexInputDescriptionImp
         return this.type;
     }
 
+    @Override
+    public String getGroup() {
+        return this.group;
+    }
+
+    @Override
+    public boolean isGroup() {
+        return getGroup() != null && !getGroup().isEmpty();
+    }
+
     public abstract static class AbstractBuilder<T extends TypedComplexInputDescription, B extends AbstractBuilder<T,
             B>> extends ComplexInputDescriptionImpl.AbstractBuilder<T, B> implements
             TypedComplexInputDescription.Builder<T, B> {
 
         private Class<? extends ComplexData<?>> type;
+        private String group;
 
         @Override
         @SuppressWarnings("unchecked")
@@ -70,6 +84,17 @@ public class TypedComplexInputDescriptionImpl extends ComplexInputDescriptionImp
 
         public Class<? extends ComplexData<?>> getType() {
             return type;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public B withGroup(String group) {
+            this.group = group;
+            return (B) this;
+        }
+
+        public String getGroup() {
+            return group;
         }
 
     }

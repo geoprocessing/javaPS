@@ -55,6 +55,7 @@ public class TypedComplexOutputDescriptionImpl extends ComplexOutputDescriptionI
             B>> extends ComplexOutputDescriptionImpl.AbstractBuilder<T, B> implements
             TypedComplexOutputDescription.Builder<T, B> {
         private Class<? extends ComplexData<?>> type;
+        private String group;
 
         @Override
         @SuppressWarnings("unchecked")
@@ -65,6 +66,17 @@ public class TypedComplexOutputDescriptionImpl extends ComplexOutputDescriptionI
 
         public Class<? extends ComplexData<?>> getType() {
             return type;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public B withGroup(String group) {
+            this.group = group;
+            return (B) this;
+        }
+
+        public String getGroup() {
+            return group;
         }
 
     }

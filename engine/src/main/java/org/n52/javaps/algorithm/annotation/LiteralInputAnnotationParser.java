@@ -77,14 +77,19 @@ class LiteralInputAnnotationParser<M extends AccessibleObject & Member, B extend
         List<String> allowedValues = getAllowedValues(annotation, binding);
         TypedProcessDescriptionFactory descriptionFactory = new TypedProcessDescriptionFactory();
 
-        return descriptionFactory.literalInput().withIdentifier(annotation.identifier()).withTitle(annotation.title())
-                .withAbstract(annotation.abstrakt()).withMinimalOccurence(annotation.minOccurs()).withMaximalOccurence(
-                        getMaxOccurence(annotation, allowedValues)).withType(bindingType).withDefaultLiteralDataDomain(
-                                descriptionFactory.literalDataDomain().withValueDescription(allowedValues.isEmpty()
-                                        ? OwsAnyValue.instance()
-                                        : new OwsAllowedValues(allowedValues.stream().map(OwsValue::new))).withDataType(
-                                                bindingType.getDataType()).withDefaultValue(getDefaultValue(annotation,
-                                                        allowedValues)).withUOM(annotation.uom())).build();
+        return descriptionFactory.literalInput()
+                .withIdentifier(annotation.identifier())
+                .withTitle(annotation.title())
+                .withAbstract(annotation.abstrakt())
+                .withMinimalOccurence(annotation.minOccurs())
+                .withMaximalOccurence(getMaxOccurence(annotation, allowedValues))
+                .withType(bindingType).withDefaultLiteralDataDomain(descriptionFactory.literalDataDomain()
+                        .withValueDescription(allowedValues.isEmpty() ? OwsAnyValue.instance()
+                                        : new OwsAllowedValues(allowedValues.stream().map(OwsValue::new)))
+                        .withDataType(bindingType.getDataType())
+                        .withDefaultValue(getDefaultValue(annotation, allowedValues))
+                        .withUOM(annotation.uom()))
+                .withGroup(annotation.group()).build();
     }
 
     @Override

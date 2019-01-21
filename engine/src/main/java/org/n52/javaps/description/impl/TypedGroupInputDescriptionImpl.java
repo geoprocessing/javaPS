@@ -51,6 +51,21 @@ public class TypedGroupInputDescriptionImpl extends GroupInputDescriptionImpl im
         return (Collection<? extends TypedProcessInputDescription<?>>) super.getInputDescriptions();
     }
 
+    @Override
+    public Object getType() {
+        return String.class;
+    }
+
+    @Override
+    public Class getPayloadType() {
+        return String.class;
+    }
+
+    @Override
+    public Class getBindingType() {
+        return String.class;
+    }
+
     public static class Builder extends AbstractBuilder<TypedGroupInputDescription, Builder> {
         @Override
         public TypedGroupInputDescription build() {
