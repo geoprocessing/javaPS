@@ -391,9 +391,14 @@
             </dependency>
 
             <dependency>
-            	<groupId>xml-apis</groupId>
-            	<artifactId>xml-apis</artifactId>
-            	<version>1.4.01</version>
+                <groupId>xml-apis</groupId>
+                <artifactId>xml-apis</artifactId>
+                <version>1.4.01</version>
+            </dependency>
+            <dependency>
+                <groupId>org.n52.wacodis</groupId>
+                <artifactId>javaps-wacodis-backend</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -469,7 +474,7 @@
                 </executions>
             </plugin>
 
-            <plugin>
+<!--            <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <inherited>false</inherited>
@@ -511,7 +516,7 @@
                     <generateChildNotices>false</generateChildNotices>
                 </configuration>
                 <executions>
-                    <!--
+                    
                     <execution>
                         <id>check-notice</id>
                         <phase>initialize</phase>
@@ -519,7 +524,7 @@
                             <goal>check</goal>
                         </goals>
                     </execution>
-                    -->
+                    
                     <execution>
                         <id>generate-notice</id>
                         <phase>initialize</phase>
@@ -528,7 +533,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 
