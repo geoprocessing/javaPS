@@ -28,6 +28,8 @@ import org.n52.shetland.ogc.wps.description.ProcessInputDescription;
 import org.n52.shetland.ogc.wps.description.impl.GroupInputDescriptionImpl;
 import org.n52.javaps.description.TypedGroupInputDescription;
 import org.n52.javaps.description.TypedProcessInputDescription;
+import org.n52.javaps.io.Data;
+import org.n52.javaps.io.complex.ComplexData;
 
 public class TypedGroupInputDescriptionImpl extends GroupInputDescriptionImpl implements TypedGroupInputDescription {
     protected TypedGroupInputDescriptionImpl(AbstractBuilder<?, ?> builder) {
@@ -65,4 +67,27 @@ public class TypedGroupInputDescriptionImpl extends GroupInputDescriptionImpl im
             return super.withInput(input);
         }
     }
+
+    @Override
+    public boolean isGroup() {
+    	return true;
+    }
+
+	@Override
+	public ComplexData<?> getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Class<?> getPayloadType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Class<? extends Data<?>> getBindingType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

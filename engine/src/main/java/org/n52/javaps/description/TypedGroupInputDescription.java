@@ -16,13 +16,14 @@
  */
 package org.n52.javaps.description;
 
+import org.n52.javaps.io.complex.ComplexData;
 import org.n52.shetland.ogc.wps.description.GroupInputDescription;
 
 /**
  *
  * @author Christian Autermann
  */
-public interface TypedGroupInputDescription extends GroupInputDescription, TypedProcessInputDescriptionContainer {
+public interface TypedGroupInputDescription extends GroupInputDescription, TypedProcessInputDescription<ComplexData<?>>, TypedProcessInputDescriptionContainer {
     @Override
     default TypedGroupInputDescription asGroup() {
         return this;

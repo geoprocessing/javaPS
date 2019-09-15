@@ -16,13 +16,14 @@
  */
 package org.n52.javaps.description;
 
+import org.n52.javaps.io.complex.ComplexData;
 import org.n52.shetland.ogc.wps.description.GroupOutputDescription;
 
 /**
  *
  * @author Christian Autermann
  */
-public interface TypedGroupOutputDescription extends GroupOutputDescription, TypedProcessOutputDescriptionContainer {
+public interface TypedGroupOutputDescription extends GroupOutputDescription, TypedProcessOutputDescription<ComplexData<?>>, TypedProcessOutputDescriptionContainer {
     @Override
     default TypedGroupOutputDescription asGroup() {
         return this;

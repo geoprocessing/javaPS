@@ -27,6 +27,8 @@ import org.n52.shetland.ogc.wps.description.ProcessOutputDescription;
 import org.n52.shetland.ogc.wps.description.impl.GroupOutputDescriptionImpl;
 import org.n52.javaps.description.TypedGroupOutputDescription;
 import org.n52.javaps.description.TypedProcessOutputDescription;
+import org.n52.javaps.io.Data;
+import org.n52.javaps.io.complex.ComplexData;
 
 public class TypedGroupOutputDescriptionImpl extends GroupOutputDescriptionImpl implements TypedGroupOutputDescription {
 
@@ -64,5 +66,28 @@ public class TypedGroupOutputDescriptionImpl extends GroupOutputDescriptionImpl 
             return super.withOutput(output);
         }
     }
+
+    @Override
+    public boolean isGroup() {
+    	return true;
+    }
+
+	@Override
+	public ComplexData<?> getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Class<?> getPayloadType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Class<? extends Data<?>> getBindingType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
