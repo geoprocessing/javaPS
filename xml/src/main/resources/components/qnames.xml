@@ -50,4 +50,12 @@
         <constructor-arg name="namespaceURI" value="http://www.opengis.net/wps/2.0"/>
         <constructor-arg name="localPart" value="GetStatus"/>
     </bean>
+     <bean id="performStepQName" class="javax.xml.namespace.QName">
+        <constructor-arg name="namespaceURI" value="http://www.opengis.net/wps/2.0"/>
+        <constructor-arg name="localPart" value="PerformStep"/>
+    </bean>
+    <bean id="finishQName" class="javax.xml.namespace.QName">
+        <constructor-arg name="namespaceURI" value="http://www.opengis.net/wps/2.0"/>
+        <constructor-arg name="localPart" value="Finish"/>
+    </bean>
 </beans>

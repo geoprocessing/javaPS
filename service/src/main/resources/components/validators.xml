@@ -27,7 +27,10 @@
 
     <!-- parameter validators -->
     <bean id="jobIdParameterValidator" class="org.n52.javaps.service.operator.validation.JobIdParameterValidator" />
+    <bean id="getStatusParameterValidator" class="org.n52.javaps.service.operator.validation.GetStatusParameterValidator" />
     <bean id="executeParameterValidator" class="org.n52.javaps.service.operator.validation.ExecuteParameterValidator" />
+    <bean id="performStepParameterValidator" class="org.n52.javaps.service.operator.validation.PerfomStepParameterValidator" />
+    <bean id="finishParameterValidator" class="org.n52.javaps.service.operator.validation.FinishParameterValidator" />
     <bean id="getCapabiltiesParameterValidator" class="org.n52.javaps.service.operator.validation.GetCapabiltiesParameterValidator" />
     <bean id="describeProcessParameterValidator" class="org.n52.javaps.service.operator.validation.DescribeProcessParameterValidator" />
 

@@ -179,6 +179,14 @@ public interface WPSConstants {
 
         QName QN_GET_STATUS = wps(EN_GET_STATUS);
 
+        String EN_PERFORM_STEP = "PerformStep";
+
+        QName QN_PERFORM_STEP = wps(EN_PERFORM_STEP);
+
+        String EN_FINISH = "Finish";
+
+        QName QN_FINISH = wps(EN_FINISH);
+
         String EN_INPUT = "Input";
 
         QName QN_INPUT = wps(EN_INPUT);

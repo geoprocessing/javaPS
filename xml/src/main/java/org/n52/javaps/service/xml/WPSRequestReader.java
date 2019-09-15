@@ -48,8 +48,10 @@ import org.n52.shetland.ogc.wps.data.impl.StringValueProcessData;
 import org.n52.shetland.ogc.wps.request.DescribeProcessRequest;
 import org.n52.shetland.ogc.wps.request.DismissRequest;
 import org.n52.shetland.ogc.wps.request.ExecuteRequest;
+import org.n52.shetland.ogc.wps.request.FinishRequest;
 import org.n52.shetland.ogc.wps.request.GetResultRequest;
 import org.n52.shetland.ogc.wps.request.GetStatusRequest;
+import org.n52.shetland.ogc.wps.request.PerformStepRequest;
 import org.n52.svalbard.decode.stream.StreamReaderKey;
 import org.n52.svalbard.decode.stream.xml.AbstractElementXmlStreamReader;
 import org.n52.svalbard.decode.stream.xml.XmlStreamReaderKey;
@@ -66,7 +68,7 @@ public class WPSRequestReader extends AbstractElementXmlStreamReader {
             WPSConstants.Elem.QN_GET_STATUS), new XmlStreamReaderKey(WPSConstants.Elem.QN_DISMISS),
             new XmlStreamReaderKey(WPSConstants.Elem.QN_DESCRIBE_PROCESS), new XmlStreamReaderKey(
                     WPSConstants.Elem.QN_EXECUTE), new XmlStreamReaderKey(WPSConstants.Elem.QN_GET_CAPABILITIES),
-            new XmlStreamReaderKey(WPSConstants.Elem.QN_GET_RESULT)));
+            new XmlStreamReaderKey(WPSConstants.Elem.QN_GET_RESULT),new XmlStreamReaderKey(WPSConstants.Elem.QN_PERFORM_STEP),new XmlStreamReaderKey(WPSConstants.Elem.QN_FINISH)));
 
     @Override
     public Set<StreamReaderKey> getKeys() {
@@ -91,7 +93,11 @@ public class WPSRequestReader extends AbstractElementXmlStreamReader {
                     return readGetCapabilitiesRequest(start, reader);
                 } else if (start.getName().equals(WPSConstants.Elem.QN_GET_RESULT)) {
                     return readGetResultRequest(start, reader);
-                } else {
+                } else if (start.getName().equals(WPSConstants.Elem.QN_PERFORM_STEP)) {
+					return readPerformStepRequest(start,reader);
+				} else if (start.getName().equals(WPSConstants.Elem.QN_FINISH)) {
+					return readFinishRequest(start,reader);
+				}else {
                     throw unexpectedTag(start);
                 }
             }
@@ -197,6 +203,61 @@ public class WPSRequestReader extends AbstractElementXmlStreamReader {
                     throw unexpectedTag(start);
                 }
 
+            } else if (event.isEndElement()) {
+                return request;
+            }
+        }
+        throw eof();
+    }
+
+
+    private PerformStepRequest readPerformStepRequest(StartElement elem,
+            XMLEventReader reader) throws XMLStreamException {
+        PerformStepRequest request = new PerformStepRequest();
+        readServiceAndVersion(elem, request);
+
+        getAttribute(elem, WPSConstants.Attr.AN_MODE).flatMap(ExecutionMode::fromString).ifPresent(
+                request::setExecutionMode);
+        getAttribute(elem, WPSConstants.Attr.AN_RESPONSE).flatMap(ResponseMode::fromString).ifPresent(
+                request::setResponseMode);
+
+        while (reader.hasNext()) {
+            XMLEvent event = reader.nextEvent();
+            if (event.isStartElement()) {
+                StartElement start = event.asStartElement();
+                if (start.getName().equals(OWSConstants.Elem.QN_IDENTIFIER)) {
+                    request.setId(readIdentifier(start, reader));
+                } else if (start.getName().equals(WPSConstants.Elem.QN_JOB_ID)) {
+                    request.setJobId(readJobId(start, reader));
+				}else if (start.getName().equals(WPSConstants.Elem.QN_INPUT)) {
+                    request.addInput(readInput(start, reader));
+                } else if (start.getName().equals(WPSConstants.Elem.QN_OUTPUT)) {
+                    request.addOutput(readOutput(start, reader));
+                } else {
+                    throw unexpectedTag(start);
+                }
+            } else if (event.isEndElement()) {
+                return request;
+            }
+        }
+        throw eof();
+    }
+
+    private FinishRequest readFinishRequest(StartElement elem,
+            XMLEventReader reader) throws XMLStreamException {
+        FinishRequest request = new FinishRequest();
+
+        readServiceAndVersion(elem, request);
+
+        while (reader.hasNext()) {
+            XMLEvent event = reader.nextEvent();
+            if (event.isStartElement()) {
+                StartElement start = event.asStartElement();
+                if (start.getName().equals(WPSConstants.Elem.QN_JOB_ID)) {
+                    request.setJobId(readJobId(start, reader));
+                } else {
+                    throw unexpectedTag(start);
+                }
             } else if (event.isEndElement()) {
                 return request;
             }

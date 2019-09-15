@@ -57,4 +57,13 @@
         <constructor-arg name="operation" ref="getStatusOperation"/>
         <constructor-arg name="name" ref="getStatusQName" />
     </bean>
+
+    <bean class="org.n52.svalbard.decode.stream.xml.XmlStreamingOperationDecoder">
+        <constructor-arg name="operation" ref="performStepOperation"/>
+        <constructor-arg name="name" ref="performStepQName" />
+    </bean>
+    <bean class="org.n52.svalbard.decode.stream.xml.XmlStreamingOperationDecoder">
+        <constructor-arg name="operation" ref="finishOperation"/>
+        <constructor-arg name="name" ref="finishQName" />
+    </bean>
 </beans>

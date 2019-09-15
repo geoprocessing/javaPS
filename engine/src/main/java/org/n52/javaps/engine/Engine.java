@@ -61,6 +61,8 @@ public interface Engine {
 
     StatusInfo dismiss(JobId identifier) throws JobNotFoundException;
 
+    Result finish(JobId identifier) throws EngineException;
+
     JobId execute(OwsCode identifier,
             List<ProcessData> inputs,
             List<OutputDefinition> outputs,
@@ -70,4 +72,8 @@ public interface Engine {
 
     Future<Result> getResult(JobId jobId) throws EngineException;
 
+    Result performStep(JobId jobId,
+            List<ProcessData> inputs,
+            List<OutputDefinition> outputs,
+            ResponseMode responseMode) throws InputDecodingException,EngineException;
 }

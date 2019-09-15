@@ -56,5 +56,14 @@
         <constructor-arg name="version" value="2.0.0" />
         <constructor-arg name="operation" value="Dismiss" />
     </bean>
-
+    <bean id="performStepOperation" class="org.n52.shetland.ogc.ows.service.OwsOperationKey">
+        <constructor-arg name="service" value="WPS" />
+        <constructor-arg name="version" value="2.0.0" />
+        <constructor-arg name="operation" value="PerformStep" />
+    </bean>
+    <bean id="finishOperation" class="org.n52.shetland.ogc.ows.service.OwsOperationKey">
+        <constructor-arg name="service" value="WPS" />
+        <constructor-arg name="version" value="2.0.0" />
+        <constructor-arg name="operation" value="Finish" />
+    </bean>
 </beans>

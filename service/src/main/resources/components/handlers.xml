@@ -33,5 +33,7 @@
     <bean id="executeHandler" class="org.n52.javaps.service.handler.ExecuteHandler"/>
     <bean id="getCapabilitiesHandler" class="org.n52.javaps.service.handler.GetCapabilitiesHandler"/>
     <bean id="describeProcessHandler" class="org.n52.javaps.service.handler.DescribeProcessHandler"/>
+    <bean id="performStepHandler" class="org.n52.javaps.service.handler.PerformStepHandler"/>
+    <bean id="finishHandler" class="org.n52.javaps.service.handler.FinishHandler"/>
 
 </beans>

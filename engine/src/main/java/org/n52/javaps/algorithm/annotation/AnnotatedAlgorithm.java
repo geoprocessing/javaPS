@@ -36,6 +36,8 @@ public class AnnotatedAlgorithm extends AbstractAlgorithm {
 
     private final Object algorithmInstance;
 
+    private ProcessExecutionContext executionContext;
+
     @Inject
     public AnnotatedAlgorithm(InputHandlerRepository parserRepository, OutputHandlerRepository generatorRepository,
             LiteralTypeRepository literalTypeRepository) {
@@ -56,10 +58,15 @@ public class AnnotatedAlgorithm extends AbstractAlgorithm {
 
     @Override
     public void execute(ProcessExecutionContext context) throws ExecutionException {
+    	this.executionContext = context;
         this.metadata.getInputBindings().forEach((id,
                 binding) -> binding.set(this.algorithmInstance, context.getInputs().get(id)));
         this.metadata.getExecuteBinding().execute(this.algorithmInstance);
         this.metadata.getOutputBindings().forEach((id,
                 binding) -> context.getOutputs().put(id, binding.get(this.algorithmInstance)));
+    }
+
+    public ProcessExecutionContext getContext() {
+    	return this.executionContext;
     }
 }

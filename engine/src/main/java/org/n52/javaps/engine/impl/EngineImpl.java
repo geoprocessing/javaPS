@@ -20,6 +20,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.time.OffsetDateTime;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,8 @@ import com.google.common.util.concurrent.AbstractFuture;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.SettableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+import cn.edu.whu.model.IEnvModel;
 
 public class EngineImpl implements Engine, Destroyable {
     private static final String EXECUTING = "Executing {}";
@@ -138,6 +141,13 @@ public class EngineImpl implements Engine, Destroyable {
         Job job = getJob(identifier);
         this.cancelers.get(identifier).cancel();
         return job.getStatus();
+    }
+
+    @Override
+    public Result finish(JobId identifier) throws EngineException {
+        LOG.info("finishing {}", identifier);
+        Job job = getJob(identifier);
+        return job.modelFinish();
     }
 
     @Override
@@ -220,7 +230,7 @@ public class EngineImpl implements Engine, Destroyable {
         this.executor.shutdownNow();
     }
 
-    private Job getJob(JobId identifier) throws JobNotFoundException {
+    public Job getJob(JobId identifier) throws JobNotFoundException {
         return Optional.ofNullable(jobs.get(identifier)).orElseThrow(jobNotFound(identifier));
     }
 
@@ -380,8 +390,96 @@ public class EngineImpl implements Engine, Destroyable {
             return this.jobStatus;
         }
 
+        /**
+         * @author Mingda Zhang
+         */
+        public void modelInit() {
+        	setJobStatus(JobStatus.initializing());
+        	LOG.info("Initializing {}",this.jobId);
+        	try {
+        		 this.inputs = processInputDecoder.decode(description, inputData);
+                 this.algorithm.execute(this);
+                 setJobStatus(JobStatus.initialized());
+                 LOG.info("Executed {}, creating result", this.jobId);
+        	} catch (Throwable ex) {
+                LOG.error("{} failed", this.jobId);
+                setJobStatus(JobStatus.failed());
+                this.nonPersistedResult.setException(ex);
+                try {
+					set(onJobCompletion(this));
+				} catch (EngineException e) {
+					setException(ex);
+				}
+            }
+
+        }
+
+        public Result performStep(List<ProcessData> stepInputs,
+                List<OutputDefinition> outputs) throws EngineException {
+
+        	setJobStatus(JobStatus.updating());
+        	Result result = new Result();
+        	result.setJobId(this.jobId);
+        	//result.setExpirationDate(OffsetDateTime.now());
+        	IEnvModel iEnvModel = ((IEnvModel)this.algorithm);
+        	try {
+				ProcessInputs _inputs = processInputDecoder.decode(this.description, stepInputs);
+				ProcessExecutionContextImpl contextImpl = new ProcessExecutionContextImpl(this.description, jobId, stepInputs,_inputs, outputs);
+				iEnvModel.performStep(contextImpl);
+				List<ProcessData> outputDatas = processOutputEncoder.create(contextImpl);
+				if(outputDatas!=null)
+					outputDatas.forEach(output->result.addOutput(output));
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				setJobStatus(JobStatus.failed());
+				 throw new EngineException(e1);
+			}
+
+        	setJobStatus(JobStatus.updated());
+
+			Calendar endTime = iEnvModel.getEndTime();
+			Calendar currentTime = iEnvModel.getCurrentTime();
+			if (endTime != null && currentTime != null) {
+				if (currentTime.compareTo(endTime) >= 0)
+					setJobStatus(JobStatus.done());
+			}
+			return result;
+        }
+
+        public Result modelFinish() throws EngineException {
+        	setJobStatus(JobStatus.finishing());
+
+        	IEnvModel model = (IEnvModel)this.algorithm;
+
+        	LOG.info("Executed {}, creating result", this.jobId);
+        	try {
+        		model.finish();
+				this.nonPersistedResult.set(processOutputEncoder.create(this));
+				setJobStatus(JobStatus.succeeded());
+				LOG.info("Created result for {}", this.jobId);
+			} catch (Exception e) {
+				LOG.error("Failed creating result for {}", this.jobId);
+                setJobStatus(JobStatus.failed());
+                this.nonPersistedResult.setException(e);
+			} finally {
+                try {
+                    set(onJobCompletion(this));
+                } catch (EngineException ex) {
+                    setException(ex);
+                }
+            }
+        	return resultPersistence.getResult(this.getJobId());
+        	//return getStatus();
+        }
+
         @Override
         public void run() {
+        	//if this is an environmental model, this method only performs initialization. by mingda zhang
+        	if(this.algorithm instanceof IEnvModel) {
+        		modelInit();
+        		return;
+        	}
+
             setJobStatus(JobStatus.running());
             LOG.info(EXECUTING, this.jobId);
             try {
@@ -454,4 +552,14 @@ public class EngineImpl implements Engine, Destroyable {
             return this.responseMode;
         }
     }
+
+	@Override
+	public Result performStep(JobId jobId, List<ProcessData> inputs, List<OutputDefinition> outputs,
+			ResponseMode responseMode) throws InputDecodingException, EngineException {
+
+		LOG.info("performStep {}", jobId);
+		Job job = getJob(jobId);
+
+		return job.performStep(inputs, outputs);
+	}
 }
