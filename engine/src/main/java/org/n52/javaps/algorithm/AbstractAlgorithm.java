@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 52°North Initiative for Geospatial Open Source
+ * Copyright 2016-2020 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,6 +45,11 @@ public abstract class AbstractAlgorithm extends AbstractObservable implements IA
             this.description = createDescription();
         }
         return this.description;
+    }
+
+    //add by mingda zhang
+    public void setDescription(TypedProcessDescription description) {
+    	this.description = description;
     }
 
     protected abstract TypedProcessDescription createDescription();

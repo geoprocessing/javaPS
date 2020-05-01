@@ -34,7 +34,7 @@
     },
     "serviceProvider.city" : {
       "type" : "string",
-      "value" : "Münster"
+      "value" : "Wuhan"
     },
     "serviceProvider.postalCode" : {
       "type" : "string",
@@ -42,7 +42,7 @@
     },
     "serviceProvider.country" : {
       "type" : "string",
-      "value" : "Germany"
+      "value" : "China"
     },
     "serviceProvider.email" : {
       "type" : "string",
@@ -136,7 +136,7 @@
     },
     "service.serviceURL" : {
       "type" : "uri",
-      "value" : "http://localhost:8080/wps/service"
+      "value" : "http://localhost:8080/webapp/service"
     },
     "filewatcher.enabled" : {
       "type" : "boolean",
@@ -148,7 +148,7 @@
     },
     "misc.baseDirectory" : {
       "type" : "file",
-      "value" : "/tmp/wps/outputs/"
+      "value" : "E:/workspace/javaps/tmp/"
     },
     "misc.duration" : {
       "type" : "string",

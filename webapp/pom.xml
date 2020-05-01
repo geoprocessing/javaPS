@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2016-2019 52°North Initiative for Geospatial Open Source
+    Copyright 2016-2020 52°North Initiative for Geospatial Open Source
     Software GmbH
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,6 +41,24 @@
     </licenses>
 
     <dependencies>
+
+		<dependency>
+			<groupId>geoprocessing</groupId>
+			<artifactId>wps4m</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+    
+		<dependency>
+			<groupId>org.n52.geoprocessing</groupId>
+			<artifactId>javaps-jts-backend</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+   			 <groupId>org.apache.httpcomponents</groupId>
+   			 <artifactId>httpcore</artifactId>
+        </dependency>
+		
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>service</artifactId>

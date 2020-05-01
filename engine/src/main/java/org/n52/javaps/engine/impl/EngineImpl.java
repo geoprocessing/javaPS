@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 52°North Initiative for Geospatial Open Source
+ * Copyright 2016-2020 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -288,7 +288,7 @@ public class EngineImpl implements Engine, Destroyable {
 
         private final ProcessOutputs outputs;
 
-        private final TypedProcessDescription description;
+       // private final TypedProcessDescription description;
 
         private final IAlgorithm algorithm;
 
@@ -317,7 +317,7 @@ public class EngineImpl implements Engine, Destroyable {
             this.jobId = Objects.requireNonNull(jobId, "jobId");
             this.algorithm = Objects.requireNonNull(algorithm, "algorithm");
             this.inputData = inputData;
-            this.description = algorithm.getDescription();
+            //this.description = algorithm.getDescription();
             this.outputDefinitions = Objects.requireNonNull(outputDefinitions, "outputDefinitions");
             this.responseMode = Objects.requireNonNull(responseMode, "responseMode");
             this.outputs = new ProcessOutputs();
@@ -345,7 +345,7 @@ public class EngineImpl implements Engine, Destroyable {
 
         @Override
         public TypedProcessDescription getDescription() {
-            return this.description;
+            return this.algorithm.getDescription();
         }
 
         public IAlgorithm getAlgorithm() {
@@ -397,7 +397,7 @@ public class EngineImpl implements Engine, Destroyable {
         	setJobStatus(JobStatus.initializing());
         	LOG.info("Initializing {}",this.jobId);
         	try {
-        		 this.inputs = processInputDecoder.decode(description, inputData);
+        		 this.inputs = processInputDecoder.decode(this.algorithm.getDescription(), inputData);
                  this.algorithm.execute(this);
                  setJobStatus(JobStatus.initialized());
                  LOG.info("Executed {}, creating result", this.jobId);
@@ -423,8 +423,8 @@ public class EngineImpl implements Engine, Destroyable {
         	//result.setExpirationDate(OffsetDateTime.now());
         	IEnvModel iEnvModel = ((IEnvModel)this.algorithm);
         	try {
-				ProcessInputs _inputs = processInputDecoder.decode(this.description, stepInputs);
-				ProcessExecutionContextImpl contextImpl = new ProcessExecutionContextImpl(this.description, jobId, stepInputs,_inputs, outputs);
+				ProcessInputs _inputs = processInputDecoder.decode(this.algorithm.getDescription(), stepInputs);
+				ProcessExecutionContextImpl contextImpl = new ProcessExecutionContextImpl(this.algorithm.getDescription(), jobId, stepInputs,_inputs, outputs);
 				iEnvModel.performStep(contextImpl);
 				List<ProcessData> outputDatas = processOutputEncoder.create(contextImpl);
 				if(outputDatas!=null)
@@ -483,7 +483,7 @@ public class EngineImpl implements Engine, Destroyable {
             setJobStatus(JobStatus.running());
             LOG.info(EXECUTING, this.jobId);
             try {
-                this.inputs = processInputDecoder.decode(description, inputData);
+                this.inputs = processInputDecoder.decode(this.algorithm.getDescription(), inputData);
                 this.algorithm.execute(this);
                 LOG.info("Executed {}, creating result", this.jobId);
                 try {
